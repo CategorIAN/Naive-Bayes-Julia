@@ -17,5 +17,31 @@ function soybean()
         "Leaves", 
         "Leafspots-Halo", 
         "Leafspot-Size", 
-        "Leaf"
+        "Leaf-Shred",
+        "Leaf-Malf",
+        "Leaf-Mild",
+        "Stem",
+        "Lodging",
+        "Stem-Cankers",
+        "Canker-Lesion",
+        "Fruiting-Bodies",
+        "External Decay",
+        "Mycelium"
+        "Int-Discolor",
+        "Sclerotia",
+        "Fruit-Pods",
+        "Fruit Spots",
+        "Seed",
+        "Mold-Growth",
+        "Seed-Discolor",
+        "Seed-Size",
+        "Shriveling",
+        "Roots",
+        "Class"  #Target
     ]
+    replace = nothing
+    target_name = "Class"
+    classification = true
+    return (name, file, columns, target_name, replace, classification)
+end
+end
