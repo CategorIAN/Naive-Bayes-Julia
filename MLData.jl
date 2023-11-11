@@ -1,6 +1,8 @@
+import Pkg; Pkg.add("DataFrames"); Pkg.add("CSV")
+
 module MLData
 using DataFrames
-using csv
+using CSV
 
 struct MLData
     name::String

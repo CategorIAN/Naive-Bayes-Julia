@@ -1,4 +1,20 @@
+include("MLData.jl")
+
 module DataDictionary
+
+using ..MLData: MLData
+
+datanames = ["SoyBean"]
+
+function metadata(name::String)
+    if name == "SoyBean"
+        soybean()
+    end
+end
+
+function dataobject(name::String)
+    return MLData(metadata(name)...)
+end
 
 function soybean()
     name = "SoyBean"
@@ -26,7 +42,7 @@ function soybean()
         "Canker-Lesion",
         "Fruiting-Bodies",
         "External Decay",
-        "Mycelium"
+        "Mycelium",
         "Int-Discolor",
         "Sclerotia",
         "Fruit-Pods",
@@ -44,4 +60,5 @@ function soybean()
     classification = true
     return (name, file, columns, target_name, replace, classification)
 end
+
 end
