@@ -1,8 +1,6 @@
-include("MLData.jl")
-
 module DataDictionary
-
-using ..MLData: MLData
+include("MLData.jl")
+using .MLDataModule: MLData
 
 datanames = ["SoyBean"]
 

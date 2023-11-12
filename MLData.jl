@@ -1,6 +1,5 @@
+module MLDataModule
 import Pkg; Pkg.add("DataFrames"); Pkg.add("CSV")
-
-module MLData
 using DataFrames
 using CSV
 
@@ -11,12 +10,12 @@ struct MLData
     columns::Vector{String}
     target_name::String
     features::Vector{String}
-    replace::Int
+    replace::Union{Int, Nothing}
     classification::Bool
     classes::Vector{String}
-    function MLData(name::String, data_loc::Int, columns::Vector{String}, target_name::String, replace::Int, classification::Bool)
+    function MLData(name::String, data_loc::String, columns::Vector{String}, target_name::String, replace::Union{Int,Nothing}, classification::Bool)
         df = CSV.read(data_loc, DataFrame)
-        return new(name, data_loc, df, columns, target_name, features, replace, classification, [])
+        return new(name, data_loc, df, columns, target_name, columns, replace, classification, [])
     end
 end
 
