@@ -19,7 +19,8 @@ function soybean()
     file = "raw_data/soybean-small.csv"
     columns = [
         "Date", 
-        "Plant-Stand", 
+        "Plant-Stand",
+        "Precip",
         "Temp", 
         "Hail", 
         "Crop-Hist", 
@@ -29,9 +30,10 @@ function soybean()
         "Germination", 
         "Plant-Growth", 
         "Leaves", 
-        "Leafspots-Halo", 
+        "Leafspots-Halo",
+        "Leafspots-Marg",
         "Leafspot-Size", 
-        "Leaf-Shred",
+        "Leaf-Shread",
         "Leaf-Malf",
         "Leaf-Mild",
         "Stem",
