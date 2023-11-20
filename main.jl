@@ -1,17 +1,14 @@
 module Main
 include("DataDictionary.jl")
-import Pkg; Pkg.add("DataFrames"); Pkg.add("CSV")
+import Pkg; Pkg.add("DataFrames"); Pkg.add("CSV"); Pkg.add("PrettyTables")
 using CSV
 using DataFrames
+using PrettyTables
 
 
 function main()
     S = DataDictionary.dataobject("SoyBean")
-    df = S.df
-    println(length(S.columns))
-    println(names(df))
-    #CSV.write("df.csv", df)
-    #DataDictionary.soybean()
+    CSV.write("df.csv", S.df)
 end
 
 
