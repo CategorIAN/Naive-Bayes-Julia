@@ -14,4 +14,9 @@ function binned(df::DataFrame, b::Int)
     end
     return DataFrame(Dict(col => f(col) for col in names(df)))
 end
+
+function getQ(df::DataFrame)
+    Q = groupby(df, ["Class"])
+    return Q
+end
 end

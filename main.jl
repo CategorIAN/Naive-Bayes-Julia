@@ -10,7 +10,7 @@ using PrettyTables
 function main()
     S = DataDictionary.dataobject("SoyBean")
     df = NaiveBayes.binned(S.df, 5)
-    CSV.write("df.csv", df)
+    pretty_table(NaiveBayes.getQ(df)[1])
 end
 
 
