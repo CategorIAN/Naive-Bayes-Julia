@@ -7,7 +7,7 @@ function binned(df::DataFrame, b::Int)
         try
             colvalues = convert.(Int, df[!, col])
             minval = minimum(colvalues); maxval = maximum(colvalues); step = (maxval - minval) / b
-            return cut(colvalues, minval:step:maxval, labels = 1:b, allowempty=true, extend = true)
+            return cut(colvalues, minval:step:maxval, labels = 1:b, allowempty = true, extend = true)
         catch e
             return df[!, col]
         end
@@ -16,7 +16,8 @@ function binned(df::DataFrame, b::Int)
 end
 
 function getQ(df::DataFrame)
-    Q = groupby(df, ["Class"])
-    return Q
+    # I need to group the dataframe by class.
+    x = groupby(df, :Class)
+    return combine(x, nrow)
 end
 end
