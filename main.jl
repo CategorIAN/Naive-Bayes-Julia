@@ -8,7 +8,8 @@ using PrettyTables
 
 
 function main(i)
-    df = NaiveBayes.binned(DataDictionary.dataobject("SoyBean").df, 5)
+    ml = DataDictionary.dataobject("SoyBean")
+    df = NaiveBayes.binned(ml.df, 5)
     if i == 1
         CSV.write("df_binned.csv", df)
     end
@@ -21,8 +22,13 @@ function main(i)
     if i == 3
         pretty_table(NaiveBayes.getQ(df))
     end
+    if i == 4
+        Q = NaiveBayes.getQ(df)
+        F = NaiveBayes.getF(ml, df, 0.1, 1, Q)(1)
+        pretty_table(F)
+    end
 end
 
 
-main(3)
+main(4)
 end

@@ -1,7 +1,10 @@
 module NaiveBayes
 import Pkg; Pkg.add("CategoricalArrays")
+include("MLData.jl")
 using DataFrames
 using CategoricalArrays
+using .MLDataModule: MLData
+
 function binned(df::DataFrame, b::Int)
     function f(col::String)
         try
@@ -16,8 +19,16 @@ function binned(df::DataFrame, b::Int)
 end
 
 function getQ(df::DataFrame)
-    # I need to group the dataframe by class.
-    x = groupby(df, :Class)
-    return combine(x, nrow)
+    return  combine(groupby(df, :Class), nrow => "Count", proprow => "Q")
+end
+
+function getF(ml::MLData, df::DataFrame, p::Number, m::Int, Qframe::DataFrame)
+    function g(j::Int)
+        s = ml.features[j]
+        println(s)
+        Fframe = combine(groupby(df, [:Class, s]), nrow => "Count")
+        return Fframe
+    end
+    return g
 end
 end
