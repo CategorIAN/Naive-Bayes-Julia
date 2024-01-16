@@ -1,9 +1,10 @@
 module NaiveBayes
-import Pkg; Pkg.add("CategoricalArrays")
+import Pkg; Pkg.add("CategoricalArrays"); Pkg.add("PrettyTables")
 include("MLData.jl")
 using DataFrames
 using CategoricalArrays
-using .MLDataModule: MLData
+using PrettyTables
+using ..DataDictionary.MLDataModule: MLData
 
 function binned(df::DataFrame, b::Int)
     function f(col::String)
@@ -24,10 +25,17 @@ end
 
 function getF(ml::MLData, df::DataFrame, p::Number, m::Int, Qframe::DataFrame)
     function g(j::Int)
+        println("The Dataframe:")
+        pretty_table(df)
         s = ml.features[j]
-        println(s)
-        Fframe = combine(groupby(df, [:Class, s]), nrow => "Count")
-        return Fframe
+        println("The Feature is $s.")
+        println("The Grouped Dataframe")
+        gdf = groupby(df, ["Class", s])
+
+        #Fframe = combine(groupby(df, [:Class, :s]), nrow => "Count")
+        #Fframe = pd.DataFrame(df.groupby(by=["Class", self.data.features[j]])["Class"].agg("count")).rename(columns={"Class": "Count"})
+        #return Fframe
+        return gdf
     end
     return g
 end
