@@ -1,6 +1,7 @@
 module Main
 include("DataDictionary.jl")
 include("NaiveBayes.jl")
+include("MLData.jl")
 import Pkg; Pkg.add("DataFrames"); Pkg.add("CSV"); Pkg.add("PrettyTables")
 using DataFrames
 using CSV
@@ -17,21 +18,14 @@ end
 
 function main(i)
     ml = DataDictionary.dataobject("SoyBean")
-    println(typeof(ml))
     df = NaiveBayes.binned(ml.df, 5)
     if i == 1
         CSV.write("df_binned.csv", df)
     end
     if i == 2
-        for (k, v) in NaiveBayes.getQ(df)
-            println(k)
-            pretty_table(v)
-        end
-    end
-    if i == 3
         pretty_table(NaiveBayes.getQ(df))
     end
-    if i == 4
+    if i == 3
         println("=========================")
         Q = NaiveBayes.getQ(df)
         pretty_table(Q)
@@ -42,5 +36,5 @@ function main(i)
     end
 end
 
-main(4)
+main(2)
 end

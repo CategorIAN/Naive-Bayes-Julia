@@ -25,17 +25,12 @@ end
 
 function getF(ml::MLData, df::DataFrame, p::Number, m::Int, Qframe::DataFrame)
     function g(j::Int)
-        println("The Dataframe:")
-        pretty_table(df)
-        s = ml.features[j]
-        println("The Feature is $s.")
-        println("The Grouped Dataframe")
-        gdf = groupby(df, ["Class", s])
+        gdf = groupby(df, [:Class, Symbol(ml.features[j])])
+        F = combine(gdf, nrow => "Count")
+        F2 = transform(F, [:Class, ])
 
-        #Fframe = combine(groupby(df, [:Class, :s]), nrow => "Count")
-        #Fframe = pd.DataFrame(df.groupby(by=["Class", self.data.features[j]])["Class"].agg("count")).rename(columns={"Class": "Count"})
-        #return Fframe
-        return gdf
+        #Fcol = Fframe.index.to_series().map(lambda t: (Fframe["Count"][t] + 1 + m * p) (Qframe.at[t[0], "Count"] + len(self.data.features) + m))
+        return F
     end
     return g
 end
