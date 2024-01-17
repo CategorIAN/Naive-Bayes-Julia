@@ -26,12 +26,17 @@ function main(i)
         pretty_table(NaiveBayes.getQ(df))
     end
     if i == 3
-        Q = NaiveBayes.getQ(df)
-        println(Q)
-        F_func = NaiveBayes.getF(ml, df, 0.1, 1, Q)
-        F = F_func(1)
+        F = NaiveBayes.getF(ml, df, 0.1, 1, NaiveBayes.getQ(df))(1)
+        pretty_table(F)
+    end
+    if i == 4
+        Fs = NaiveBayes.getFs(ml, df, 0.1, 1, NaiveBayes.getQ(df))
+        for j in 1:length(ml.features)
+            println("Feature: $(ml.features[j])")
+            pretty_table(Fs[j])
+        end
     end
 end
 
-main(3)
+main(4)
 end

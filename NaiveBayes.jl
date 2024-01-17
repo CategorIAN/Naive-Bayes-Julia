@@ -1,6 +1,5 @@
 module NaiveBayes
 import Pkg; Pkg.add("CategoricalArrays"); Pkg.add("PrettyTables")
-include("MLData.jl")
 using DataFrames
 using CategoricalArrays
 using PrettyTables
@@ -24,22 +23,29 @@ function getQ(df::DataFrame)
 end
 
 function getF(ml::MLData, df::DataFrame, p::Number, m::Int, Q::DataFrame)
-    function g(j::Int)
-        gdf = groupby(df, [:Class, Symbol(ml.features[j])])
-        F = combine(gdf, nrow => "F_Count")
-        pretty_table(Q)
-        pretty_table(F)
-        Q2 = select(Q, :Class, :Count => "Q_Count")
-        pretty_table(Q2)
-        F2 = innerjoin(F, Q2; on = :Class)
-        pretty_table(F2)
-        println(size(ml.features))
-        F3 = transform(F2, [:F_Count, :Q_Count] => ByRow((f, q) -> (f + 1 + m * p) / (q + length(ml.features) + m)) => "F")
-        pretty_table(F3)
-
-        #Fcol = Fframe.index.to_series().map(lambda t: (Fframe["Count"][t] + 1 + m * p)/ (Qframe.at[t[0], "Count"] + len(self.data.features) + m))
-        return F
+    return j::Int -> begin
+        F = combine(groupby(df, [:Class, Symbol(ml.features[j])]), nrow => "F_Count")
+        FjoinQ = innerjoin(F, select(Q, :Class, :Count => "Q_Count"); on = :Class)
+        return transform(FjoinQ, [:F_Count, :Q_Count] => ByRow((f, q) -> (f + 1 + m * p) / (q + length(ml.features) + m)) => "F")
     end
-    return g
+end
+
+function getFs(ml::MLData, df::DataFrame, p::Number, m::Int, Q::DataFrame)
+    F_func = getF(ml, df, p, m, Q)
+    return Dict(j => F_func(j) for j in 1:length(ml.features))
+end
+
+#def class_prob(self, df, p, m, Qframe):
+
+function class_prob(ml::MLData, df::DataFrame, p::Number, m::Int, Q::DataFrame)
+    #Fframes = self.getFs(df, p, m, Qframe)
+    Fs = getFs(ml, df, p, m, Q)
+    #def f(cl, x):
+    #function (cl::String, x::)
+
+    #        def f(cl, x):
+    #return reduce(lambda r, j: r * Fframes[j].to_dict()["F"].get((cl, x[j]), 0),
+    #range(len(self.data.features)), Qframe.at[cl, "Q"])
+    #return f
 end
 end
