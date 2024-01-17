@@ -26,8 +26,16 @@ end
 function getF(ml::MLData, df::DataFrame, p::Number, m::Int, Q::DataFrame)
     function g(j::Int)
         gdf = groupby(df, [:Class, Symbol(ml.features[j])])
-        F = combine(gdf, nrow => "Count")
-        #F2 = transform(F, [:Class, Symbol(ml.features[j]), :Count] => ByRow((x, y, z) -> (z + 1 + m * p) / Q
+        F = combine(gdf, nrow => "F_Count")
+        pretty_table(Q)
+        pretty_table(F)
+        Q2 = select(Q, :Class, :Count => "Q_Count")
+        pretty_table(Q2)
+        F2 = innerjoin(F, Q2; on = :Class)
+        pretty_table(F2)
+        println(size(ml.features))
+        F3 = transform(F2, [:F_Count, :Q_Count] => ByRow((f, q) -> (f + 1 + m * p) / (q + length(ml.features) + m)) => "F")
+        pretty_table(F3)
 
         #Fcol = Fframe.index.to_series().map(lambda t: (Fframe["Count"][t] + 1 + m * p)/ (Qframe.at[t[0], "Count"] + len(self.data.features) + m))
         return F
