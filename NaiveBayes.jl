@@ -23,13 +23,13 @@ function getQ(df::DataFrame)
     return  combine(groupby(df, :Class), nrow => "Count", proprow => "Q")
 end
 
-function getF(ml::MLData, df::DataFrame, p::Number, m::Int, Qframe::DataFrame)
+function getF(ml::MLData, df::DataFrame, p::Number, m::Int, Q::DataFrame)
     function g(j::Int)
         gdf = groupby(df, [:Class, Symbol(ml.features[j])])
         F = combine(gdf, nrow => "Count")
-        F2 = transform(F, [:Class, ])
+        #F2 = transform(F, [:Class, Symbol(ml.features[j]), :Count] => ByRow((x, y, z) -> (z + 1 + m * p) / Q
 
-        #Fcol = Fframe.index.to_series().map(lambda t: (Fframe["Count"][t] + 1 + m * p) (Qframe.at[t[0], "Count"] + len(self.data.features) + m))
+        #Fcol = Fframe.index.to_series().map(lambda t: (Fframe["Count"][t] + 1 + m * p)/ (Qframe.at[t[0], "Count"] + len(self.data.features) + m))
         return F
     end
     return g

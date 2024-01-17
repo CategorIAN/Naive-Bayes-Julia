@@ -26,15 +26,12 @@ function main(i)
         pretty_table(NaiveBayes.getQ(df))
     end
     if i == 3
-        println("=========================")
         Q = NaiveBayes.getQ(df)
-        pretty_table(Q)
-        println("=========================")
+        println(Q)
         F_func = NaiveBayes.getF(ml, df, 0.1, 1, Q)
         F = F_func(1)
-        print_gdf(F)
     end
 end
 
-main(2)
+main(3)
 end
