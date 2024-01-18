@@ -23,8 +23,8 @@ function getQ(df::DataFrame)
 end
 
 function getF(ml::MLData, df::DataFrame, p::Number, m::Int, Q::DataFrame)
-    return j::Int -> begin
-        F = combine(groupby(df, [:Class, Symbol(ml.features[j])]), nrow => "F_Count")
+    return j::String-> begin
+        F = combine(groupby(df, [:Class, Symbol(j)]), nrow => "F_Count")
         FjoinQ = innerjoin(F, select(Q, :Class, :Count => "Q_Count"); on = :Class)
         return transform(FjoinQ, [:F_Count, :Q_Count] => ByRow((f, q) -> (f + 1 + m * p) / (q + length(ml.features) + m)) => "F")
     end
@@ -32,7 +32,7 @@ end
 
 function getFs(ml::MLData, df::DataFrame, p::Number, m::Int, Q::DataFrame)
     F_func = getF(ml, df, p, m, Q)
-    return Dict(j => F_func(j) for j in 1:length(ml.features))
+    return Dict(j => F_func(j) for j in ml.features)
 end
 
 #def class_prob(self, df, p, m, Qframe):
@@ -41,16 +41,17 @@ function class_prob(ml::MLData, df::DataFrame, p::Number, m::Int, Q::DataFrame)
     #Fframes = self.getFs(df, p, m, Qframe)
     Fs = getFs(ml, df, p, m, Q)
     #def f(cl, x):
-    """
-    function f(cl::String, x::DataFramerow)
-        function g(r::Number, j::Int)
-            return r * Fs[j][findfirst(==()), :F]
 
-        reduce()
-    """
+    function f(cl::String, x::DataFrameRow)
+        function g(r::Number, j::String)
+            val1 = filter([:Class, Symbol(j)] => (class, feature) -> (class == cl) & (feature == x[j]), Fs[j])
+            return val1
+        end
+        return g
+    end
 
     #        def f(cl, x):
     #return reduce(lambda r, j: r * Fframes[j].to_dict()["F"].get((cl, x[j]), 0), range(len(self.data.features)), Qframe.at[cl, "Q"])
-    #return f
+    return f
 end
 end
