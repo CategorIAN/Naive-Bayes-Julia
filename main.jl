@@ -23,7 +23,8 @@ function main(i)
         CSV.write("df_binned.csv", df)
     end
     if i == 2
-        pretty_table(NaiveBayes.getQ(df))
+        Q = NaiveBayes.getQ(df)
+        println(typeof(Q[1, :]))
     end
     if i == 3
         F = NaiveBayes.getF(ml, df, 0.1, 1, NaiveBayes.getQ(df))(1)
@@ -38,5 +39,5 @@ function main(i)
     end
 end
 
-main(4)
+main(2)
 end

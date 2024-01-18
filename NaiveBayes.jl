@@ -41,11 +41,16 @@ function class_prob(ml::MLData, df::DataFrame, p::Number, m::Int, Q::DataFrame)
     #Fframes = self.getFs(df, p, m, Qframe)
     Fs = getFs(ml, df, p, m, Q)
     #def f(cl, x):
-    #function (cl::String, x::)
+    """
+    function f(cl::String, x::DataFramerow)
+        function g(r::Number, j::Int)
+            return r * Fs[j][findfirst(==()), :F]
+
+        reduce()
+    """
 
     #        def f(cl, x):
-    #return reduce(lambda r, j: r * Fframes[j].to_dict()["F"].get((cl, x[j]), 0),
-    #range(len(self.data.features)), Qframe.at[cl, "Q"])
+    #return reduce(lambda r, j: r * Fframes[j].to_dict()["F"].get((cl, x[j]), 0), range(len(self.data.features)), Qframe.at[cl, "Q"])
     #return f
 end
 end
