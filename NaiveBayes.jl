@@ -40,14 +40,14 @@ end
 function class_prob(ml::MLData, df::DataFrame, p::Number, m::Int, Q::DataFrame)
     #Fframes = self.getFs(df, p, m, Qframe)
     Fs = getFs(ml, df, p, m, Q)
-    #def f(cl, x):
-
+    Q_d = Dict(zip(Q.Class, Q.Q))
     function f(cl::String, x::DataFrameRow)
-        function g(r::Number, j::String)
-            val1 = filter([:Class, Symbol(j)] => (class, feature) -> (class == cl) & (feature == x[j]), Fs[j])
-            return val1
+        g = (r::Number, j::String) -> begin 
+        df = Fs[j]
+        d = Dict(zip(zip(df.Class, df[:, Symbol(j)]), df.F))
+        return r * get(d, (cl, x[j]), 0)
         end
-        return g
+        return foldl(g, ml.features; init=1000000)
     end
 
     #        def f(cl, x):

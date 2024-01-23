@@ -22,6 +22,7 @@ function main(i)
     p = 0.1
     m = 1
     Q = NaiveBayes.getQ(df)
+    Q_d = Dict(zip(Q.Class, Q.Q))
     if i == 1
         CSV.write("df_binned.csv", df)
     end
@@ -41,19 +42,9 @@ function main(i)
         end
     end
     if i == 5
-        F = NaiveBayes.getF(ml, df, p, m, Q)("Date")
-        pretty_table(F)
-        println(typeof(df[1, :]))
         x = df[1, Not(:Class)]  #Has Class D1.
-        println(x["Date"])      #Date is 4.
         T = NaiveBayes.class_prob(ml, df, p, m, Q)("D1", x)
-        for j in ml.features
-            println("=================")
-            println(j)
-            pretty_table(T(0.1, j))
-        end
-        println(ml.features)
-        println(names(x))
+        println(T)
     end
 end
 
