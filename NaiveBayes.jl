@@ -24,6 +24,9 @@ end
 
 function getF(ml::MLData, df::DataFrame, p::Number, m::Int, Q::DataFrame)
     return j::String-> begin
+        println(j)
+        println(j in names(df))
+        println("Date" in names(df))
         df = combine(groupby(df, [:Class, Symbol(j)]), nrow => "F_Count")
         dfJoinQ = innerjoin(df, select(Q, :Class, :Q_Count); on = :Class)
         #dfWithF = transform(dfJoinQ, [:F_Count, :Q_Count] => ByRow((f, q) -> (f + 1 + m * p) / (q + length(ml.features) + m)) => "F")
