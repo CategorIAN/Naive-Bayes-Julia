@@ -19,14 +19,16 @@ function binned(df::DataFrame, b::Int)
 end
 
 function getQ(df::DataFrame)
-    return  combine(groupby(df, :Class), nrow => "Count", proprow => "Q")
+    return  combine(groupby(df, :Class), nrow => "Q_Count", proprow => "Q")
 end
 
 function getF(ml::MLData, df::DataFrame, p::Number, m::Int, Q::DataFrame)
     return j::String-> begin
-        F = combine(groupby(df, [:Class, Symbol(j)]), nrow => "F_Count")
-        FjoinQ = innerjoin(F, select(Q, :Class, :Count => "Q_Count"); on = :Class)
-        return transform(FjoinQ, [:F_Count, :Q_Count] => ByRow((f, q) -> (f + 1 + m * p) / (q + length(ml.features) + m)) => "F")
+        df = combine(groupby(df, [:Class, Symbol(j)]), nrow => "F_Count")
+        dfJoinQ = innerjoin(df, select(Q, :Class, :Q_Count); on = :Class)
+        #dfWithF = transform(dfJoinQ, [:F_Count, :Q_Count] => ByRow((f, q) -> (f + 1 + m * p) / (q + length(ml.features) + m)) => "F")
+        #return Dict(zip(zip(dfWithF.Class, dfWithF[:, Symbol(j)]), dfWithF.F))
+        return transform(dfJoinQ, [:F_Count, :Q_Count] => ByRow((f, q) -> (f + 1 + m * p) / (q + length(ml.features) + m)) => "F")
     end
 end
 
@@ -40,12 +42,11 @@ end
 function class_prob(ml::MLData, df::DataFrame, p::Number, m::Int, Q::DataFrame)
     #Fframes = self.getFs(df, p, m, Qframe)
     Fs = getFs(ml, df, p, m, Q)
-    Q_d = Dict(zip(Q.Class, Q.Q))
+    println("Hello World")
     function f(cl::String, x::DataFrameRow)
         g = (r::Number, j::String) -> begin 
-        df = Fs[j]
-        d = Dict(zip(zip(df.Class, df[:, Symbol(j)]), df.F))
-        return r * get(d, (cl, x[j]), 0)
+        FDict = Fs[j]
+        return r * get(FDict, (cl, x[j]), 0)
         end
         return foldl(g, ml.features; init=1000000)
     end
